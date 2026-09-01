@@ -1,152 +1,159 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengelolaan Inventory</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Sistem Inventory</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 font-sans">
+<body class="bg-slate-50 min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-white border-b px-6 py-4 flex justify-between items-center shadow-sm">
-        <h1 class="text-xl font-bold text-slate-800">📦 Sistem Inventory</h1>
+<header class="bg-white border-b sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <h1 class="text-xl font-bold text-slate-800">📦 Sistem Pengelolaan Inventory</h1>
         <div class="flex items-center gap-4">
-            <span id="userInfo" class="font-medium text-slate-600 text-sm">👤 User</span>
-            <button id="btnLogout" class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-100 transition">Logout</button>
+            <span id="userInfo" class="text-sm text-slate-600 font-medium"></span>
+            <button id="btnLogout" class="text-sm text-red-600 hover:text-red-800 font-semibold">Logout</button>
         </div>
-    </header>
+    </div>
+</header>
 
-    <div class="max-w-7xl mx-auto p-6 flex gap-6">
-        <!-- Sidebar Navigation -->
-        <aside class="w-64 bg-white p-4 rounded-2xl border shadow-sm h-fit">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Menu Utama</h2>
-            <nav class="space-y-1">
-                <button id="btn-stok" onclick="switchTab('stok')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium bg-blue-600 text-white shadow-sm transition">
-                    📦 Daftar Stok
-                </button>
-                <button id="btn-tambah" onclick="switchTab('tambah')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-600 hover:bg-slate-50 transition">
-                 ➕ Tambah Barang
-                </button>
-                <button id="btn-gudang" onclick="switchTab('gudang')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-600 hover:bg-slate-50 transition">
-                    🏢 Kelola Gudang
-                </button>
-                <button id="btn-vendor" onclick="switchTab('vendor')" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-600 hover:bg-slate-50 transition">
-                    🏭 Kelola Vendor
-                </button>
-            </nav>
-        </aside>
+<main class="max-w-6xl mx-auto px-6 py-6">
 
-        <!-- Main Content Area -->
-        <main class="flex-1 space-y-4">
-            <!-- Alert Container -->
-            <div id="alertContainer"></div>
+    <div id="alertContainer" class="mb-4"></div>
 
-            <!-- Tab 1: Daftar Stok -->
-            <div id="tab-stok" class="tab-content bg-white p-6 rounded-2xl border shadow-sm">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-slate-800">Daftar Stok Barang</h2>
-                    <input type="text" id="searchInput" placeholder="Cari barang..." class="px-4 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                                <th class="p-3">Serial Number</th>
-                                <th class="p-3">Nama Barang</th>
-                                <th class="p-3">Stok</th>
-                                <th class="p-3">Harga</th>
-                                <th class="p-3">Gudang</th>
-                                <th class="p-3">Vendor</th>
-                                <th class="p-3 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelInventory" class="text-sm">
-                            <!-- Data dimuat via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Tab 2: Tambah Barang -->
-            <div id="tab-tambah" class="tab-content hidden bg-white p-6 rounded-2xl border shadow-sm">
-                <h2 class="text-lg font-bold text-slate-800 mb-4">Tambah Barang Baru</h2>
-                <form id="formBarang" class="space-y-4 max-w-lg">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Serial Number</label>
-                        <input type="text" id="serial_number" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Barang</label>
-                        <input type="text" id="nama_barang" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis / Kategori</label>
-                        <input type="text" id="jenis" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Stok Awal</label>
-                            <input type="number" id="stok" min="0" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Harga (IDR)</label>
-                            <input type="number" id="harga" min="0" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Gudang</label>
-                            <select id="id_gudang" class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                                <option value="">-- Pilih Gudang --</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Vendor</label>
-                            <select id="id_vendor" class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                                <option value="">-- Pilih Vendor --</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition">Simpan Barang</button>
-                </form>
-            </div>
-
-            <!-- Tab 3: Kelola Gudang -->
-            <div id="tab-gudang" class="tab-content hidden bg-white p-6 rounded-2xl border shadow-sm">
-                <h2 class="text-lg font-bold text-slate-800 mb-4">Tambah Gudang / Cabang</h2>
-                <form id="formGudang" class="space-y-4 max-w-lg">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Gudang</label>
-                        <input type="text" id="nama_gudang" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi / Alamat</label>
-                        <input type="text" id="lokasi" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition">Simpan Gudang</button>
-                </form>
-            </div>
-
-            <!-- Tab 4: Kelola Vendor -->
-            <div id="tab-vendor" class="tab-content hidden bg-white p-6 rounded-2xl border shadow-sm">
-                <h2 class="text-lg font-bold text-slate-800 mb-4">Tambah Vendor Supplier</h2>
-                <form id="formVendor" class="space-y-4 max-w-lg">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Vendor</label>
-                        <input type="text" id="nama_vendor" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kontak / Telepon</label>
-                        <input type="text" id="kontak_vendor" required class="w-full p-2.5 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition">Simpan Vendor</button>
-                </form>
-            </div>
-        </main>
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6">
+        <button id="btn-stok" onclick="switchTab('stok')"
+            class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white shadow-sm">
+            📋 Data Barang
+        </button>
+        <button id="btn-gudang" onclick="switchTab('gudang')"
+            class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50">
+            🏬 Gudang
+        </button>
+        <button id="btn-vendor" onclick="switchTab('vendor')"
+            class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50">
+            🚚 Vendor/Supplier
+        </button>
     </div>
 
-    <script src="app.js"></script>
+    <!-- TAB: STOK BARANG -->
+    <div id="tab-stok" class="tab-content">
+        <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <h2 class="font-bold text-slate-800 mb-4">➕ Tambah Barang</h2>
+            <form id="formBarang" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Serial Number</label>
+                    <input type="text" id="serial_number" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Nama Barang</label>
+                    <input type="text" id="nama_barang" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Jenis Barang</label>
+                    <input type="text" id="jenis" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Kuantitas Stok</label>
+                    <input type="number" id="stok" min="0" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Harga</label>
+                    <input type="number" id="harga" min="0" step="0.01" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Gudang</label>
+                    <select id="id_gudang" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">-- Pilih Gudang --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Vendor</label>
+                    <select id="id_vendor" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                        <option value="">-- Pilih Vendor --</option>
+                    </select>
+                </div>
+                <div class="md:col-span-3">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-sm">
+                        Simpan Barang
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-bold text-slate-800">📋 Daftar Barang</h2>
+                <input type="text" id="searchInput" placeholder="Cari barang..."
+                    class="border border-slate-300 rounded-lg px-3 py-2 text-sm w-64">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left text-slate-500 border-b">
+                            <th class="p-3">Serial Number</th>
+                            <th class="p-3">Nama Barang</th>
+                            <th class="p-3">Stok</th>
+                            <th class="p-3">Harga</th>
+                            <th class="p-3">Gudang</th>
+                            <th class="p-3">Vendor</th>
+                            <th class="p-3 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelInventory"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: GUDANG -->
+    <div id="tab-gudang" class="tab-content hidden">
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+            <h2 class="font-bold text-slate-800 mb-4">🏬 Tambah Gudang Cabang</h2>
+            <form id="formGudang" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Nama Gudang</label>
+                    <input type="text" id="nama_gudang" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Lokasi</label>
+                    <input type="text" id="lokasi" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-sm">
+                        Tambah Gudang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB: VENDOR -->
+    <div id="tab-vendor" class="tab-content hidden">
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+            <h2 class="font-bold text-slate-800 mb-4">🚚 Tambah Vendor/Supplier</h2>
+            <form id="formVendor" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Nama Vendor</label>
+                    <input type="text" id="nama_vendor" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Kontak</label>
+                    <input type="text" id="kontak_vendor" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg text-sm">
+                        Tambah Vendor
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-CREATE DATABASE db_inventory;
+CREATE DATABASE IF NOT EXISTS db_inventory;
 USE db_inventory;
 
 DROP TABLE IF EXISTS inventory;
@@ -10,7 +10,8 @@ CREATE TABLE ADMIN (
     nomor_id VARCHAR(50) PRIMARY KEY,
     nama VARCHAR(100) NOT NULL,
     kontak VARCHAR(20),
-    email VARCHAR(100)
+    email VARCHAR(100),
+    password VARCHAR(255) NOT NULL
 ) ENGINE=INNODB;
 
 CREATE TABLE storage_unit (
@@ -37,7 +38,15 @@ CREATE TABLE inventory (
     FOREIGN KEY (id_vendor) REFERENCES vendor_supplier(id_vendor) ON DELETE SET NULL
 ) ENGINE=INNODB;
 
-DROP TABLE IF EXISTS Inventory;
-DROP TABLE IF EXISTS Storage_Unit;
-DROP TABLE IF EXISTS Vendor_Suplier;
-DROP TABLE IF EXISTS ADMIN;
+-- Contoh data gudang & vendor (opsional, boleh dihapus)
+INSERT INTO storage_unit (nama_gudang, lokasi) VALUES
+('Gudang Pusat', 'Surabaya'),
+('Gudang Cabang', 'Sidoarjo');
+
+INSERT INTO vendor_supplier (nama, kontak) VALUES
+('CV Sumber Makmur', '081234567890'),
+('PT Jaya Abadi', '081298765432');
+
+-- Data admin TIDAK di-insert di sini karena password harus di-hash lewat PHP
+-- (password_hash), bukan disimpan sebagai teks biasa di SQL.
+-- Jalankan seed_admin.php setelah import skema ini untuk membuat akun admin pertama.
