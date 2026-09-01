@@ -3,7 +3,6 @@ const API_GUDANG = '../controllers/gudang.php';
 const API_VENDOR = '../controllers/vendor.php';
 const API_AUTH = '../controllers/auth.php';
 
-// Fungsi berpindah tab sidebar
 window.switchTab = function(tabName) {
     const contents = document.querySelectorAll('.tab-content');
     contents.forEach(content => content.classList.add('hidden'));
