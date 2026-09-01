@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS db_inventory;
 USE db_inventory;
-
 DROP TABLE IF EXISTS inventory;
 DROP TABLE IF EXISTS storage_unit;
 DROP TABLE IF EXISTS vendor_supplier;
@@ -46,7 +45,3 @@ INSERT INTO storage_unit (nama_gudang, lokasi) VALUES
 INSERT INTO vendor_supplier (nama, kontak) VALUES
 ('CV Sumber Makmur', '081234567890'),
 ('PT Jaya Abadi', '081298765432');
-
--- Data admin TIDAK di-insert di sini karena password harus di-hash lewat PHP
--- (password_hash), bukan disimpan sebagai teks biasa di SQL.
--- Jalankan seed_admin.php setelah import skema ini untuk membuat akun admin pertama.
